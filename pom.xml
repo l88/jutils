@@ -4,12 +4,12 @@
 
 	<groupId>org.l88</groupId>
 	<artifactId>l88-jutils</artifactId>
-	<version>0.1-SNAPSHOT</version>
+	<version>0.2-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>l88-jutils</name>
+	<name>${project.groupId}:${project.artifactId}</name>
 	<description>Common Java Tools for jdk1.6</description>
-	<url>http://jutils.l88.org</url>
+	<url>http://l88.github.io/jutils</url>
 
 	<scm>
 		<connection>scm:git:URL:https://github.com/l88/jutils.git</connection>
@@ -86,13 +86,13 @@
 					</instructions>
 				</configuration>
 			</plugin>
+			<!-- Source -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
-				<version>2.2</version>
+				<version>2.4</version>
 				<executions>
 					<execution>
-						<id>attach-sources</id>
 						<phase>package</phase>
 						<goals>
 							<goal>jar-no-fork</goal>
@@ -102,19 +102,6 @@
 			</plugin>
 		</plugins>
 	</build>
-	<reporting>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.8.1</version>
-				<configuration>
-					<!--<stylesheetfile>${basedir}/src/main/javadoc/stylesheet.css</stylesheetfile> -->
-					<show>public</show>
-				</configuration>
-			</plugin>
-		</plugins>
-	</reporting>
 	<issueManagement>
 		<system>github</system>
 		<url>https://github.com/l88/jutils/issues</url>
@@ -130,16 +117,78 @@
 			<email>alexpaul@126.com</email>
 		</developer>
 	</developers>
-	<distributionManagement>
-		<repository>
-			<id>ossrh.repo</id>
-			<name>ossrh Repository</name>
-			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-		</repository>
-		<snapshotRepository>
-			<id>ossrh.repo</id>
-			<name>ossrh Repository</name>
-			<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-		</snapshotRepository>
-	</distributionManagement>
+	<licenses>
+		<license>
+			<name>The Apache License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+		</license>
+	</licenses>
+
+	<profiles>
+		<profile>
+			<id>ossrh</id>
+			<distributionManagement>
+				<repository>
+					<id>ossrh.repo</id>
+					<name>ossrh Repository</name>
+					<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+				</repository>
+				<snapshotRepository>
+					<id>ossrh.repo</id>
+					<name>ossrh Repository</name>
+					<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+				</snapshotRepository>
+			</distributionManagement>
+			<build>
+				<plugins>
+
+					<!-- Javadoc -->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<version>2.10.3</version>
+						<configuration>
+							<charset>UTF-8</charset>
+							<docencoding>UTF-8</docencoding>
+						</configuration>
+						<executions>
+							<execution>
+								<phase>package</phase>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<!-- Gpg Signature -->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<version>1.6</version>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<!-- ossrh manager -->
+					<plugin>
+						<groupId>org.sonatype.plugins</groupId>
+						<artifactId>nexus-staging-maven-plugin</artifactId>
+						<version>1.6.3</version>
+						<extensions>true</extensions>
+						<configuration>
+							<serverId>ossrh.repo</serverId>
+							<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+							<autoReleaseAfterClose>true</autoReleaseAfterClose>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>
